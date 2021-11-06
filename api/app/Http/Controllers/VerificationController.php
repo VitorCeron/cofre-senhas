@@ -24,7 +24,7 @@ class VerificationController extends Controller
             $user->markEmailAsVerified();
         }
     
-        return redirect()->to('/');
+        return redirect()->to('/success_email_verified');
     }
     
     /**

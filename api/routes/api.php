@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\UserPasswordsController;
+use App\Http\Controllers\ForgotPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +33,16 @@ Route::group([
 //e-mail de verificação de cadastro de usuário
 Route::get('email/verify/{id}', [VerificationController::class, 'verify'])->name('verification.verify');
 Route::get('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
+
+//recuperação de senha
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'password'
+
+], function ($router) {
+    Route::post('email', [ForgotPasswordController::class, 'forgot']);
+    Route::post('reset', [ForgotPasswordController::class, 'reset'])->name('password.reset');
+});
 
 Route::group([
     'middleware' => 'api',

@@ -45,11 +45,9 @@ class AuthController extends Controller
 
         $user->sendEmailVerificationNotification();
 
-        return (new RegisterUserResource([
+        return new RegisterUserResource([
             'user' => $user
-        ]))
-        ->response()
-        ->setStatusCode(201);
+        ]);
     }
 
 
@@ -90,13 +88,11 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     protected function createNewToken($token){
-        return (new LoginUserResource([
+        return new LoginUserResource([
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60,
             'user' => auth()->user()
-        ]))
-        ->response()
-        ->setStatusCode(200);
+        ]);
     }
 }

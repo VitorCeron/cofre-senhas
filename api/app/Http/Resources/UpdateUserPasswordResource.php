@@ -29,4 +29,15 @@ class UpdateUserPasswordResource extends JsonResource
             'meta' => [],
         ];
     }
+
+    /**
+     *
+     * @param  \Illuminate\Http\Request
+     * @param  \Illuminate\Http\Response
+     * @return void
+     */
+    public function withResponse($request, $response)
+    {
+        $response->setStatusCode(200);
+    }
 }

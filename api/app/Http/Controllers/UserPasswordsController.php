@@ -65,11 +65,9 @@ class UserPasswordsController extends Controller
     public function store(StoreUserPasswordRequest $request) {
         $userPasswords = $this->userPasswordsRepository->store($request->validated());
 
-        return (new StoreUserPasswordResource([
+        return new StoreUserPasswordResource([
             'user_password' => $userPasswords
-        ]))
-        ->response()
-        ->setStatusCode(201);
+        ]);
     }
 
     /**
@@ -81,11 +79,9 @@ class UserPasswordsController extends Controller
     public function update(UpdateUserPasswordRequest $request) {
         $userPassword = $this->userPasswordsRepository->update((int) $request->id, $request->all());
 
-        return (new UpdateUserPasswordResource([
+        return new UpdateUserPasswordResource([
             'user_password' => $userPassword
-        ]))
-        ->response()
-        ->setStatusCode(200);
+        ]);
     }
 
     /**

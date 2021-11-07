@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\UserPasswordsController;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\ActivityLogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +45,7 @@ Route::group([
     Route::post('reset', [ForgotPasswordController::class, 'reset'])->name('password.reset');
 });
 
+//senhas do usuário
 Route::group([
     'middleware' => 'api',
     'prefix' => 'user_passwords'
@@ -54,4 +56,13 @@ Route::group([
     Route::post('/store', [UserPasswordsController::class, 'store']);
     Route::put('/update/{id}', [UserPasswordsController::class, 'update']);
     Route::delete('/destroy/{id}', [UserPasswordsController::class, 'destroy']);
+});
+
+//logs
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'logs'
+
+], function ($router) {
+    Route::get('/get', [ActivityLogController::class, 'get']);
 });

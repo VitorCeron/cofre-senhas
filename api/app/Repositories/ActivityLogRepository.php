@@ -8,18 +8,6 @@ use Spatie\Activitylog\Models\Activity;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class ActivityLogRepository {
-
-    private $userId;
-
-    /**
-     * Create a new UserPasswordsController instance.
-     *
-     * @return void
-     */
-    public function __construct() {
-        $this->userId = Auth::user()->id;
-    }
-
     /**
      * Get all registers
      * 
@@ -30,7 +18,7 @@ class ActivityLogRepository {
         try {
             return QueryBuilder::for(Activity::class)
                 ->allowedFilters(['description'])
-                ->where('causer_id', $this->userId)
+                ->where('causer_id', Auth::user()->id)
                 ->paginate();
         } catch(\Exception $e) {
             return $e->getMessage();

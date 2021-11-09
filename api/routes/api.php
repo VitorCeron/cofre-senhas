@@ -47,7 +47,7 @@ Route::group([
 
 //senhas do usuário
 Route::group([
-    'middleware' => 'api',
+    'middleware' => 'auth:api',
     'prefix' => 'user_passwords'
 
 ], function ($router) {
@@ -60,7 +60,7 @@ Route::group([
 
 //logs
 Route::group([
-    'middleware' => 'api',
+    'middleware' => 'auth:api',
     'prefix' => 'logs'
 
 ], function ($router) {

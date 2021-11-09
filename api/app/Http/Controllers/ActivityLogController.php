@@ -20,8 +20,6 @@ class ActivityLogController extends Controller
      * @return void
      */
     public function __construct(ActivityLogRepository $activityLogRepository) {
-        $this->middleware('auth');
-        $this->middleware('verified');
         $this->activityLogRepository = $activityLogRepository;
     }
 

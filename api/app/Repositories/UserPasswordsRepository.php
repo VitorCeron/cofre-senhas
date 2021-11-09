@@ -7,18 +7,6 @@ use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class UserPasswordsRepository {
-
-    private $userId;
-
-    /**
-     * Create a new UserPasswordsController instance.
-     *
-     * @return void
-     */
-    public function __construct() {
-        $this->userId = Auth::user()->id;
-    }
-
     /**
      * Get all registers
      * 
@@ -29,7 +17,7 @@ class UserPasswordsRepository {
         try {
             return QueryBuilder::for(UserPasswords::class)
                 ->allowedFilters(['name'])
-                ->where('user_id', $this->userId)
+                ->where('user_id', Auth::user()->id)
                 ->paginate();
         } catch(\Exception $e) {
             return $e->getMessage();
@@ -46,7 +34,7 @@ class UserPasswordsRepository {
         try {
             return QueryBuilder::for(UserPasswords::class)
                 ->allowedFilters(['name'])
-                ->where('user_id', $this->userId)
+                ->where('user_id', Auth::user()->id)
                 ->where('id', $id)
                 ->first();
         } catch(\Exception $e) {

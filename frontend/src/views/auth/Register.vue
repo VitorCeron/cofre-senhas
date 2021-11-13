@@ -10,6 +10,7 @@
             label="Nome" 
             type="text"
             placeholder="João Silva"
+            lazy-rules
             :rules="[validation.required]"
             />
 
@@ -18,27 +19,36 @@
             label="E-mail" 
             type="email"
             placeholder="joaosilva@mail.com"
+            lazy-rules
             :rules="[validation.required, validation.email]"
             />
 
           <q-input 
             v-model="state.password" 
             label="Senha" 
-            type="password"
+            :type="state.type_field_password"
             placeholder="********"
             ref="password_field"
             lazy-rules
             :rules="[validation.required, validation.lengthMoreThan6]"
-            />
+            >
+                <template v-slot:append>
+                    <q-icon :name="state.icon_field_password" @click="toggleVisibilityPassword" class="cursor-pointer" />
+                </template>
+            </q-input>
 
-          <q-input 
-            v-model="state.confirm_password" 
+          <q-input
+            v-model="state.password_confirmation" 
             label="Confirme a Senha" 
-            type="password"
+            :type="state.type_field_password"
             placeholder="********"
             lazy-rules
             :rules="[validation.required, validation.sameAs(state.password)]"
-            />
+            >
+                <template v-slot:append>
+                    <q-icon :name="state.icon_field_password" @click="toggleVisibilityPassword" class="cursor-pointer" />
+                </template>
+            </q-input>
 
           <div>
             <q-btn 
@@ -72,15 +82,20 @@ import { useQuasar } from "quasar";
 import { reactive } from "vue";
 import { required, email, lengthMoreThan6, sameAs } from '@/utils/validations';
 import { useRouter } from "vue-router";
+import services from '@/services';
+import { toast } from "@/utils/notification";
 
 export default {
   setup() {
-    const $q = useQuasar();
     const router = useRouter();
 
     const state = reactive({
+        name: '',
         email: '',
-        password: ''
+        password: '',
+        password_confirmation: '',
+        type_field_password: 'password',
+        icon_field_password: 'visibility'
     })
 
     const validation = {
@@ -90,12 +105,36 @@ export default {
         sameAs
     }
 
-    function createAccount () {
-        console.log(state)
+    async function createAccount () {
+        let response = await services.users.register({
+            name: state.name,
+            email: state.email,
+            password: state.password,
+            password_confirmation: state.password_confirmation,
+        });
+
+        if(response.error) {
+            toast({
+                type: "negative",
+                message: "Erro ao criar a conta",
+            });
+            return;
+        }
+
+        toast({
+            type: "positive",
+            message: "Conta criada com sucesso"
+        });
+        goToLogin();
     }
 
-    function goToLogin() {
+    function goToLogin () {
       router.push({ name: "Login" });
+    }
+
+    function toggleVisibilityPassword () {
+        state.type_field_password = (state.type_field_password == "text") ? "password" : "text";
+        state.icon_field_password = (state.icon_field_password == "visibility") ? "visibility_off" : "visibility";
     }
 
     return {
@@ -103,6 +142,7 @@ export default {
       validation,
       createAccount,
       goToLogin,
+      toggleVisibilityPassword,
     };
   },
 };

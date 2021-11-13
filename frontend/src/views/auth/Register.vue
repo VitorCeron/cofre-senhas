@@ -78,7 +78,6 @@
 </template>
 
 <script>
-import { useQuasar } from "quasar";
 import { reactive } from "vue";
 import { required, email, lengthMoreThan6, sameAs } from '@/utils/validations';
 import { useRouter } from "vue-router";

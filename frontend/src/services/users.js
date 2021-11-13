@@ -10,6 +10,18 @@ export default httpClient => ({
         } catch (error) {
             return {error};
         }
-      },
+    },
+
+    login: async ({ email, password }) => {
+        try {
+            let response = await httpClient.post('/auth/login', {
+                email,
+                password
+              });
+              return response.data;
+        } catch (error) {
+            return {error};
+        }
+    },
   })
   

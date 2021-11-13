@@ -4,23 +4,29 @@
       <div class="q-pa-md" style="max-width: 400px; width: 400px">
         <h4 class="text-center text-weight-bold">Faça o login</h4>
 
-        <q-form @submit="onSubmit" class="q-gutter-md">
+        <q-form @submit="login" class="q-gutter-md">
           <q-input 
             v-model="state.email" 
             label="E-mail" 
             type="email"
             placeholder="joaosilva@mail.com"
+            lazy-rules
             :rules="[validation.required, validation.email]"
             />
 
           <q-input 
             v-model="state.password" 
             label="Senha" 
-            type="password"
+            :type="state.type_field_password"
             placeholder="********"
+            ref="password_field"
             lazy-rules
             :rules="[validation.required, validation.lengthMoreThan6]"
-            />
+            >
+                <template v-slot:append>
+                    <q-icon :name="state.icon_field_password" @click="toggleVisibilityPassword" class="cursor-pointer" />
+                </template>
+            </q-input>
 
           <div>
             <q-btn 
@@ -50,19 +56,21 @@
 </template>
 
 <script>
-import { useQuasar } from "quasar";
-import { reactive, ref } from "vue";
+import { reactive } from "vue";
 import { required, email, lengthMoreThan6 } from '@/utils/validations';
 import { useRouter } from "vue-router";
+import services from '@/services';
+import { toast } from "@/utils/notification";
 
 export default {
   setup() {
-    const $q = useQuasar();
     const router = useRouter();
 
     const state = reactive({
         email: '',
         password: '',
+        type_field_password: 'password',
+        icon_field_password: 'visibility'
     })
 
     const validation = {
@@ -71,18 +79,44 @@ export default {
         lengthMoreThan6
     }
 
-    function goToRegister() {
+    function goToRegister () {
       router.push({ name: "Register" });
+    }
+
+    function goToHome () {
+      router.push({ name: "ListPasswords" });
+    }
+
+    async function login () {
+      let response = await services.users.login({
+        email: state.email,
+        password: state.password,
+      });
+
+      if(response.error) {
+          toast({
+              type: "negative",
+              message: "Erro ao fazer login",
+          });
+          return;
+      }
+
+      window.localStorage.setItem('cofre_senhas_token', response.data.access_token);
+      window.localStorage.setItem('cofre_senhas_user', JSON.stringify(response.data.user));
+      goToHome();
+    }
+
+    function toggleVisibilityPassword () {
+        state.type_field_password = (state.type_field_password == "text") ? "password" : "text";
+        state.icon_field_password = (state.icon_field_password == "visibility") ? "visibility_off" : "visibility";
     }
 
     return {
       state,
       validation,
       goToRegister,
-
-      onSubmit() {
-        console.log(state)
-      },
+      toggleVisibilityPassword,
+      login,
     };
   },
 };

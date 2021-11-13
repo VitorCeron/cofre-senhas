@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from '../views/auth/Login.vue'
 import Register from '../views/auth/Register.vue'
+import ListPasswords from '../views/passwords/ListPasswords.vue'
 
 const routes = [
   {
@@ -31,6 +32,14 @@ const routes = [
     component: Register,
     meta: {
       notAuth: true
+    }
+  },
+  {
+    path: '/list_passwords',
+    name: 'ListPasswords',
+    component: ListPasswords,
+    meta: {
+      hasAuth: true
     }
   },
 ]

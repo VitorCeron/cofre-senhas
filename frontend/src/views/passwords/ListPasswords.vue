@@ -14,7 +14,7 @@
           />
       </div>
       <div class="col flex justify-end">
-        <q-btn color="primary" label="Adicionar senha" size="md" icon="add" />
+        <q-btn color="primary" label="Adicionar senha" size="md" icon="add" @click="goToCreate" />
       </div>
     </div>
 
@@ -156,16 +156,25 @@ const rows = [
   }
 ]
 
+import { useRouter } from "vue-router";
+
 export default {
   setup () {
+    const router = useRouter();
+
     const state = reactive({
         name: ''
     })
 
+    function goToCreate () {
+      router.push({ name: "CreatePassword" });
+    }
+
     return {
       state,
       columns,
-      rows
+      rows,
+      goToCreate
     }
   }
 }

@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { router } from '../router'
 import UsersService from './users'
+import UserPasswordsService from './user_passwords'
 
 const API_ENVS = {
   production: '',
@@ -12,16 +13,15 @@ const httpClient = axios.create({
   baseURL: API_ENVS.local
 })
 
-// httpClient.interceptors.request.use(config => {
-//   setGlobalLoading(true)
-//   const token = window.localStorage.getItem('token')
+httpClient.interceptors.request.use(config => {
+  const token = window.localStorage.getItem('cofre_senhas_token')
 
-//   if (token) {
-//     config.headers.common.Authorization = `Bearer ${token}`
-//   }
+  if (token) {
+    config.headers.common.Authorization = `Bearer ${token}`
+  }
 
-//   return config
-// })
+  return config
+})
 
 // httpClient.interceptors.response.use((response) => {
 //   setGlobalLoading(false)
@@ -42,4 +42,5 @@ const httpClient = axios.create({
 
 export default {
   users: UsersService(httpClient),
+  user_passwords: UserPasswordsService(httpClient),
 }

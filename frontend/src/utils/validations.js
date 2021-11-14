@@ -9,6 +9,9 @@ export const required = (val) => !!val || "O campo é obrigatório";
 export const lengthMoreThan6 = (val) =>
   val.length >= 6 || "A senha precisa ter pelo menos 6 caracteres";
 
+export const lengthMoreThan2 = (val) =>
+  val.length >= 2 || "Este campo precisa ter pelo menos 2 caracteres";
+
 export const sameAs = (locator) => {
 return (val) => val == locator || "As senhas digitadas não são iguais"
 }

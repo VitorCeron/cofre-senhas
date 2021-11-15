@@ -40,8 +40,9 @@ class UserPasswordsController extends Controller
      *
      * @return UserPasswordsResourceCollection
      */
-    public function get() {
-        $data = $this->userPasswordsRepository->get();
+    public function get(Request $request) {
+        $limit = $request->limit ?? 7;
+        $data = $this->userPasswordsRepository->get($limit);
         return new UserPasswordsResourceCollection($data);
     }
 

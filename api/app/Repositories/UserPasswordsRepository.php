@@ -12,13 +12,13 @@ class UserPasswordsRepository {
      * 
      * @return Collection
      */
-    public function get()
+    public function get($limit)
     {
         try {
             return QueryBuilder::for(UserPasswords::class)
                 ->allowedFilters(['name'])
                 ->where('user_id', Auth::user()->id)
-                ->paginate();
+                ->paginate($limit);
         } catch(\Exception $e) {
             return $e->getMessage();
         }

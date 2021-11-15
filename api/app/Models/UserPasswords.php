@@ -23,6 +23,8 @@ class UserPasswords extends Model
         'link',
         'observation',
         'user_id',
+        'created_at',
+        'updated_at',
     ];
 
     public function getActivitylogOptions(): LogOptions
@@ -30,4 +32,9 @@ class UserPasswords extends Model
         return LogOptions::defaults()
         ->logOnly(['*']);
     }
+
+    protected $casts = [
+        'created_at' => 'datetime:d/m/Y H:i:s',
+        'updated_at' => 'datetime:d/m/Y H:i:s',
+    ];
 }

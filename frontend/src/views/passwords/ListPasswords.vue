@@ -1,185 +1,111 @@
 <template>
   <q-page padding>
     <span class="text-h4">Lista de senhas</span>
-    <hr>
-    
+    <hr />
+
     <div class="row">
       <div class="col-3">
-        <q-input 
-          v-model="state.name" 
+        <q-input
+          v-model="state.filter.name"
           label="Nome"
           type="text"
           placeholder="Ex: Facebook"
           dense
-          />
+        />
       </div>
       <div class="col flex justify-end">
-        <q-btn color="primary" label="Adicionar senha" size="md" icon="add" @click="goToCreate" />
+        <q-btn
+          color="primary"
+          label="Adicionar senha"
+          size="md"
+          icon="add"
+          @click="goToCreate"
+        />
       </div>
     </div>
 
     <div class="row q-mt-md">
       <div class="col">
         <q-table
-        :rows="rows"
-        :columns="columns"
-        row-key="name"
-      />
+          :rows="state.rows"
+          :columns="columns"
+          :loading="state.loading"
+          v-model:pagination="state.pagination"
+          :filter="state.filter"
+          row-key="name"
+          @request="getData"
+        />
       </div>
     </div>
   </q-page>
-  
 </template>
 
 <script>
-import { reactive } from "vue";
-
-const columns = [
-  {
-    name: 'name',
-    required: true,
-    label: 'Dessert (100g serving)',
-    align: 'left',
-    field: row => row.name,
-    format: val => `${val}`,
-    sortable: true
-  },
-  { name: 'calories', align: 'center', label: 'Calories', field: 'calories', sortable: true },
-  { name: 'fat', label: 'Fat (g)', field: 'fat', sortable: true },
-  { name: 'carbs', label: 'Carbs (g)', field: 'carbs' },
-  { name: 'protein', label: 'Protein (g)', field: 'protein' },
-  { name: 'sodium', label: 'Sodium (mg)', field: 'sodium' },
-  { name: 'calcium', label: 'Calcium (%)', field: 'calcium', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) },
-  { name: 'iron', label: 'Iron (%)', field: 'iron', sortable: true, sort: (a, b) => parseInt(a, 10) - parseInt(b, 10) }
-]
-
-const rows = [
-  {
-    name: 'Frozen Yogurt',
-    calories: 159,
-    fat: 6.0,
-    carbs: 24,
-    protein: 4.0,
-    sodium: 87,
-    calcium: '14%',
-    iron: '1%'
-  },
-  {
-    name: 'Ice cream sandwich',
-    calories: 237,
-    fat: 9.0,
-    carbs: 37,
-    protein: 4.3,
-    sodium: 129,
-    calcium: '8%',
-    iron: '1%'
-  },
-  {
-    name: 'Eclair',
-    calories: 262,
-    fat: 16.0,
-    carbs: 23,
-    protein: 6.0,
-    sodium: 337,
-    calcium: '6%',
-    iron: '7%'
-  },
-  {
-    name: 'Cupcake',
-    calories: 305,
-    fat: 3.7,
-    carbs: 67,
-    protein: 4.3,
-    sodium: 413,
-    calcium: '3%',
-    iron: '8%'
-  },
-  {
-    name: 'Gingerbread',
-    calories: 356,
-    fat: 16.0,
-    carbs: 49,
-    protein: 3.9,
-    sodium: 327,
-    calcium: '7%',
-    iron: '16%'
-  },
-  {
-    name: 'Jelly bean',
-    calories: 375,
-    fat: 0.0,
-    carbs: 94,
-    protein: 0.0,
-    sodium: 50,
-    calcium: '0%',
-    iron: '0%'
-  },
-  {
-    name: 'Lollipop',
-    calories: 392,
-    fat: 0.2,
-    carbs: 98,
-    protein: 0,
-    sodium: 38,
-    calcium: '0%',
-    iron: '2%'
-  },
-  {
-    name: 'Honeycomb',
-    calories: 408,
-    fat: 3.2,
-    carbs: 87,
-    protein: 6.5,
-    sodium: 562,
-    calcium: '0%',
-    iron: '45%'
-  },
-  {
-    name: 'Donut',
-    calories: 452,
-    fat: 25.0,
-    carbs: 51,
-    protein: 4.9,
-    sodium: 326,
-    calcium: '2%',
-    iron: '22%'
-  },
-  {
-    name: 'KitKat',
-    calories: 518,
-    fat: 26.0,
-    carbs: 65,
-    protein: 7,
-    sodium: 54,
-    calcium: '12%',
-    iron: '6%'
-  }
-]
-
+import { reactive, onMounted, watch } from "vue";
+import services from "@/services";
+import debounce from "lodash/debounce";
 import { useRouter } from "vue-router";
 
+const columns = [
+  { name: "name", align: "center", label: "Nome", field: "name" },
+  { name: "link", align: "center", label: "Link", field: "link" },
+  {
+    name: "updated_at",
+    align: "center",
+    label: "Última atualização",
+    field: "updated_at",
+  },
+];
+
 export default {
-  setup () {
+  setup() {
     const router = useRouter();
 
     const state = reactive({
-        name: ''
-    })
+      name: "",
+      filter: {
+        name: "",
+      },
+      rows: [],
+      pagination: {},
+      loading: false,
+    });
 
-    function goToCreate () {
+    function goToCreate() {
       router.push({ name: "CreatePassword" });
     }
+
+    async function getData(props) {
+      state.loading = true;
+      let { data, meta } = await services.user_passwords.get({
+        page: props.pagination.page,
+        limit: props.pagination.rowsPerPage,
+        filter: props.filter,
+      });
+
+      state.rows = data;
+      state.pagination.page = meta.current_page;
+      state.pagination.rowsPerPage = meta.per_page;
+      state.pagination.rowsNumber = meta.total[0];
+      state.loading = false;
+    }
+
+    onMounted(async () => {
+      await getData({
+        pagination: state.pagination,
+        filter: state.filter,
+      });
+    });
 
     return {
       state,
       columns,
-      rows,
-      goToCreate
-    }
-  }
-}
+      goToCreate,
+      getData,
+    };
+  },
+};
 </script>
 
 <style>
-
 </style>

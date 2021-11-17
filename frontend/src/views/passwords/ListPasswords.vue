@@ -34,16 +34,38 @@
           :filter="state.filter"
           row-key="name"
           @request="getData"
-        />
+        >
+          <template v-slot:body-cell-actions="props">
+            <q-td :props="props">
+              <q-btn 
+                @click="goToUpdate(props.row.id)"
+                flat 
+                color="white" 
+                text-color="black" 
+                icon="edit" 
+                size="sm"
+                class="q-mr-md"
+                />
+
+              <q-btn 
+                @click="openModalRemove(props.row)"
+                flat 
+                color="white" 
+                text-color="black" 
+                icon="delete" 
+                size="sm"
+                />
+            </q-td>
+          </template>
+        </q-table>
       </div>
     </div>
   </q-page>
 </template>
 
 <script>
-import { reactive, onMounted, watch } from "vue";
+import { reactive, onMounted } from "vue";
 import services from "@/services";
-import debounce from "lodash/debounce";
 import { useRouter } from "vue-router";
 
 const columns = [
@@ -54,6 +76,12 @@ const columns = [
     align: "center",
     label: "Última atualização",
     field: "updated_at",
+  },
+  {
+    name: "actions",
+    align: "center",
+    label: "Ações",
+    field: "actions",
   },
 ];
 
@@ -97,11 +125,21 @@ export default {
       });
     });
 
+    function goToUpdate (passwordId) {
+      router.push({ name: 'UpdatePassword', params: { id: passwordId } });
+    }
+
+    function openModalRemove (password) {
+      console.log(password);
+    }
+
     return {
       state,
       columns,
       goToCreate,
       getData,
+      goToUpdate,
+      openModalRemove,
     };
   },
 };

@@ -33,7 +33,7 @@
     >
       <q-list>
         <q-item-label header>Essential Links</q-item-label>
-        <q-item clickable tag="a" target="_blank">
+        <q-item class="active-class" :to="{ name: 'ListPasswords' }">
           <q-tooltip
             transition-show="scale"
             transition-hide="scale"  
@@ -124,5 +124,9 @@ export default {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+
+.active-class {
+  color: white !important;
 }
 </style>

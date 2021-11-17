@@ -26,7 +26,29 @@ export default httpClient => ({
             });
             return response.data;
         } catch (error) {
-            console.log('error', error)
+            return {error};
+        }
+    },
+
+    getById: async ({ passwordId }) => {
+        try {
+            let response = await httpClient.get(`/user_passwords/show/${passwordId}`);
+            return response.data;
+        } catch (error) {
+            return {error};
+        }
+    },
+
+    update: async ({ id, name, password, link, observation, user_id }) => {
+        try {
+            return await httpClient.put(`/user_passwords/update/${id}`, {
+                name,
+                password,
+                link,
+                observation,
+                user_id
+              });
+        } catch (error) {
             return {error};
         }
     },

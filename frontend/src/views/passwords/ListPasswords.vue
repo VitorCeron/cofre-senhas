@@ -46,7 +46,7 @@
                 size="sm"
                 class="q-mr-md"
                 />
-
+  
               <q-btn 
                 @click="openModalRemove(props.row)"
                 flat 
@@ -60,13 +60,40 @@
         </q-table>
       </div>
     </div>
+
+    <q-dialog v-model="state.modal">
+      <q-card style="width: 600px; max-width: 80vw;">
+        <q-card-section>
+          <div class="text-h6">Você confirma a remoção desse registro?</div>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          Você tem certeza que quer excluir o registro: <strong>{{state.selectedRemove.name}}</strong>?<br>
+        </q-card-section>
+
+        <q-card-section class="q-pt-none">
+          Essa exclusão não poderá ser desfeita
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Cancelar" color="primary" v-close-popup />
+          <q-btn 
+            @click="confirmRemoveItem"
+            flat 
+            label="Excluir" 
+            color="negative" 
+            v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
 <script>
-import { reactive, onMounted } from "vue";
+import { reactive, onMounted, ref } from "vue";
 import services from "@/services";
 import { useRouter } from "vue-router";
+import { toast } from "@/utils/notification";
 
 const columns = [
   { name: "name", align: "center", label: "Nome", field: "name" },
@@ -97,6 +124,8 @@ export default {
       rows: [],
       pagination: {},
       loading: false,
+      modal: false,
+      selectedRemove: {}
     });
 
     function goToCreate() {
@@ -130,16 +159,46 @@ export default {
     }
 
     function openModalRemove (password) {
-      console.log(password);
+      state.selectedRemove = password;
+      state.modal = true;
+    }
+    
+    async function confirmRemoveItem () {
+      let response = await services.user_passwords.delete({
+        id: state.selectedRemove.id
+      });
+
+      if(response.status != 204) {
+        toast({
+            type: "negative",
+            message: "Erro ao excluir registro",
+        });
+        state.selectedRemove = {};
+        return;
+      }
+
+      getData({
+        pagination: state.pagination,
+        filter: state.filter,
+      });
+
+      toast({
+          type: "positive",
+          message: "Registro excluído com sucesso",
+      });
+      state.selectedRemove = {};
+      
     }
 
     return {
+      alert,
       state,
       columns,
       goToCreate,
       getData,
       goToUpdate,
       openModalRemove,
+      confirmRemoveItem,
     };
   },
 };

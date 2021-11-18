@@ -52,5 +52,13 @@ export default httpClient => ({
             return {error};
         }
     },
+
+    delete: async ({ id }) => {
+        try {
+            return await httpClient.delete(`/user_passwords/destroy/${id}`);
+        } catch (error) {
+            return {error};
+        }
+    },
   })
   

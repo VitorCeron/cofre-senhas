@@ -6,6 +6,8 @@ import ListPasswords from '../views/passwords/ListPasswords.vue'
 import CreatePassword from '../views/passwords/CreatePassword.vue'
 import UpdatePassword from '../views/passwords/UpdatePassword.vue'
 
+import ListLogs from '../views/logs/ListLogs.vue'
+
 const routes = [
   {
     path: '/',
@@ -56,6 +58,14 @@ const routes = [
     path: '/update_password',
     name: 'UpdatePassword',
     component: UpdatePassword,
+    meta: {
+      hasAuth: true
+    }
+  },
+  {
+    path: '/list_logs',
+    name: 'ListLogs',
+    component: ListLogs,
     meta: {
       hasAuth: true
     }

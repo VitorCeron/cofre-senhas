@@ -11,7 +11,7 @@
           icon="menu"
         />
 
-        <q-toolbar-title>
+        <q-toolbar-title @click="goToHome" class="cursor-pointer">
           Cofre de senhas
         </q-toolbar-title>
         
@@ -47,7 +47,7 @@
           </q-item-section>
         </q-item>
         
-        <q-item clickable tag="a" target="_blank">
+        <q-item class="active-class" :to="{ name: 'ListLogs' }">
           <q-tooltip
             transition-show="scale"
             transition-hide="scale"  
@@ -105,10 +105,15 @@ export default {
       router.push({ name: 'Login' });
     }
 
+    function goToHome () {
+      router.push({ name: 'ListPasswords' })
+    }
+
     return {
       leftDrawerOpen: ref(false),
       state,
-      logout
+      logout,
+      goToHome,
     }
   }
 }

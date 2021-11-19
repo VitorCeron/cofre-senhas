@@ -93,8 +93,6 @@ export default {
         password: state.password,
       });
 
-      console.log(response.error)
-
       if(response.error) {
           toast({
               type: "negative",

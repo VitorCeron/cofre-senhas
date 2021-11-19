@@ -24,15 +24,16 @@ httpClient.interceptors.request.use(config => {
   return config
 })
 
-// httpClient.interceptors.response.use((response) => {
-//   return response
-// }, (error) => {
-//   if (error.response.status === 401) {
-//     router.push({ name: 'Home' })
-//   }
-
-//   return error
-// })
+httpClient.interceptors.response.use((response) => {
+  return response
+}, (error) => {
+  if(error.response.status === 401) {
+    window.localStorage.removeItem("cofre_senhas_token");
+    window.localStorage.removeItem("cofre_senhas_user");
+  }
+  
+  return error
+})
 
 export default {
   users: UsersService(httpClient),

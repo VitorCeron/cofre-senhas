@@ -23,5 +23,14 @@ export default httpClient => ({
             return {error};
         }
     },
+
+    logout: async () => {
+        try {
+            let response = await httpClient.post('/auth/logout');
+              return response.data;
+        } catch (error) {
+            return {error};
+        }
+    },
   })
   

@@ -76,6 +76,8 @@
 <script>
 import { reactive, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import services from '@/services';
+import { toast } from "@/utils/notification";
 
 export default {
   name: 'LayoutDefault',
@@ -92,13 +94,19 @@ export default {
         state.showTopbarAndMenu = true
         const token = window.localStorage.getItem('cofre_senhas_token')
         if (!token) {
-          router.push({ name: 'Login' })
+          state.showTopbarAndMenu = false;
+          toast({
+              type: "warning",
+              message: "Sua sessão foi encerrada, faça o login novamente.",
+          });
+          router.push({ name: 'Login' });
           return
         }
       }
     })
 
-    function logout () {
+    async function logout () {
+      await services.users.logout();
       state.showTopbarAndMenu = false;
       window.localStorage.removeItem("cofre_senhas_token");
       window.localStorage.removeItem("cofre_senhas_user");

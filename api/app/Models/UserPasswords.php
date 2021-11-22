@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 
@@ -19,7 +20,9 @@ class UserPasswords extends Model
      */
     protected $fillable = [
         'name',
+        'login',
         'password',
+        'expire',
         'link',
         'observation',
         'user_id',
@@ -34,7 +37,13 @@ class UserPasswords extends Model
     }
 
     protected $casts = [
+        'expire' => 'date:d/m/Y',
         'created_at' => 'datetime:d/m/Y H:i:s',
         'updated_at' => 'datetime:d/m/Y H:i:s',
     ];
+
+    public function expireDate($value)
+    {
+        $this->attributes['expire'] = Carbon::parse($value);
+    }
 }

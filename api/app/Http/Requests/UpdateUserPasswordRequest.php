@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Support\Carbon;
 
 class UpdateUserPasswordRequest extends FormRequest
 {
@@ -28,7 +29,9 @@ class UpdateUserPasswordRequest extends FormRequest
     {
         return [
             'name' => 'string|between:2,100',
+            'login' => 'required|string',
             'password' => 'string',
+            'expire' => '',
             'link' => '',
             'observation' => '',
             'user_id' => 'required',
@@ -56,5 +59,28 @@ class UpdateUserPasswordRequest extends FormRequest
     {
         $response = new Response(['error' => $validator->errors()->first()], 422);
         throw new ValidationException($validator, $response);
+    }
+
+    /**
+     *
+     * @return array
+     */
+    public function getData() {
+        $data = $this->validated();
+        $data['expire'] = $this->getExpire($data);
+        return $data;
+    }
+
+    /**
+     *
+     * @param array $data
+     * @return void
+     */
+    private function getExpire($data) {
+        if(!array_key_exists('expire', $data) || !$data['expire']) {
+            return null;
+        }
+
+        return Carbon::createFromFormat('d/m/Y', $data['expire'])->format('Y-m-d');
     }
 }

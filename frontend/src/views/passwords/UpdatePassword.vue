@@ -34,7 +34,34 @@
             :rules="[validation.required]"
             >
                 <template v-slot:append>
-                    <q-icon :name="state.icon_field_password" @click="toggleVisibilityPassword" class="cursor-pointer" />
+                  <q-icon 
+                      @click="copyPassword" 
+                      name="content_copy" 
+                      class="cursor-pointer q-mr-sm"  
+                      >
+                        <q-tooltip>
+                          Copiar senha
+                        </q-tooltip>
+                      </q-icon>
+
+                    <q-icon 
+                      @click="generatePassword" 
+                      name="lock_reset" 
+                      class="cursor-pointer q-mr-sm"  
+                      >
+                        <q-tooltip>
+                          Gerar senha aleatória
+                        </q-tooltip>
+                      </q-icon>
+
+                    <q-icon 
+                      :name="state.icon_field_password" 
+                      @click="toggleVisibilityPassword" 
+                      class="cursor-pointer">
+                      <q-tooltip>
+                        Esconder / mostrar senha
+                      </q-tooltip>
+                    </q-icon>
                 </template>
             </q-input>
 
@@ -176,6 +203,29 @@ export default {
       state.observation = data.observation;
     });
 
+    function generatePassword () {
+      let chars = "0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      let passwordLength = 12;
+      let password = "";
+      for (let i = 0; i <= passwordLength; i++) {
+        let randomNumber = Math.floor(Math.random() * chars.length);
+        password += chars.substring(randomNumber, randomNumber +1);
+        }
+        state.password = password;
+    }
+
+    function copyPassword() {
+      if(!state.password) {
+        return;
+      }
+
+      navigator.clipboard.writeText(state.password);
+      toast({
+          type: "positive",
+          message: "Senha copiada com sucesso"
+      });
+    }
+
     return {
       state,
       validation,
@@ -183,6 +233,8 @@ export default {
       updatePassword,
       toggleVisibilityPassword,
       optionsFn,
+      generatePassword,
+      copyPassword,
     };
   },
 };

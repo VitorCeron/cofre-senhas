@@ -25,6 +25,7 @@ class UserPasswords extends Model
         'expire',
         'link',
         'observation',
+        'score_password',
         'user_id',
         'created_at',
         'updated_at',

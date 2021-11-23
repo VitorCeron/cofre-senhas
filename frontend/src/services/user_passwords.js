@@ -1,7 +1,7 @@
 import qs from "qs";
 
 export default httpClient => ({
-    create: async ({ name, login, password, expire, link, observation, user_id }) => {
+    create: async ({ name, login, password, expire, link, observation, score_password, user_id }) => {
         try {
             return await httpClient.post('/user_passwords/store', {
                 name,
@@ -10,6 +10,7 @@ export default httpClient => ({
                 expire,
                 link,
                 observation,
+                score_password,
                 user_id
               });
         } catch (error) {
@@ -41,7 +42,7 @@ export default httpClient => ({
         }
     },
 
-    update: async ({ id, name, login, password, expire, link, observation, user_id }) => {
+    update: async ({ id, name, login, password, expire, link, observation, score_password, user_id }) => {
         try {
             return await httpClient.put(`/user_passwords/update/${id}`, {
                 name,
@@ -50,6 +51,7 @@ export default httpClient => ({
                 expire,
                 link,
                 observation,
+                score_password,
                 user_id
               });
         } catch (error) {

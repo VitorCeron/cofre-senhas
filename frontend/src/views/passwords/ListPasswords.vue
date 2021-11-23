@@ -97,7 +97,7 @@ import { toast } from "@/utils/notification";
 
 const columns = [
   { name: "name", align: "center", label: "Nome", field: "name" },
-  { name: "link", align: "center", label: "Link", field: "link" },
+  { name: "score_password", align: "center", label: "Força da senha", field: "score_password" },
   {
     name: "updated_at",
     align: "center",

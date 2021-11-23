@@ -34,6 +34,7 @@ class UpdateUserPasswordRequest extends FormRequest
             'expire' => '',
             'link' => '',
             'observation' => '',
+            'score_password' => '',
             'user_id' => 'required',
         ];
     }

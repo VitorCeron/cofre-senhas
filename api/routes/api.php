@@ -7,6 +7,7 @@ use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\UserPasswordsController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,4 +66,13 @@ Route::group([
 
 ], function ($router) {
     Route::get('/get', [ActivityLogController::class, 'get']);
+});
+
+//logs
+Route::group([
+    'middleware' => 'auth:api',
+    'prefix' => 'dashboard'
+
+], function ($router) {
+    Route::get('/get', [DashboardController::class, 'get']);
 });

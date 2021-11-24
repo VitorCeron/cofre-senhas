@@ -3,6 +3,7 @@ import { router } from '../router'
 import UsersService from './users'
 import UserPasswordsService from './user_passwords'
 import LogsService from './logs'
+import DashboardService from './dashboard'
 
 const API_ENVS = {
   production: '',
@@ -39,4 +40,5 @@ export default {
   users: UsersService(httpClient),
   user_passwords: UserPasswordsService(httpClient),
   logs: LogsService(httpClient),
+  dashboard: DashboardService(httpClient),
 }

@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
 import Login from '../views/auth/Login.vue'
 import Register from '../views/auth/Register.vue'
 import ListPasswords from '../views/passwords/ListPasswords.vue'
 import CreatePassword from '../views/passwords/CreatePassword.vue'
 import UpdatePassword from '../views/passwords/UpdatePassword.vue'
+import Dashboard from '../views/dashboard/Dashboard.vue'
 
 import ListLogs from '../views/logs/ListLogs.vue'
 
@@ -53,6 +53,14 @@ const routes = [
     path: '/list_logs',
     name: 'ListLogs',
     component: ListLogs,
+    meta: {
+      hasAuth: true
+    }
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: Dashboard,
     meta: {
       hasAuth: true
     }

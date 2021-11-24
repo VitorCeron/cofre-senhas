@@ -84,7 +84,7 @@ export default {
     }
 
     function goToHome () {
-      router.push({ name: "ListPasswords" });
+      router.push({ name: "Dashboard" });
     }
 
     async function login () {

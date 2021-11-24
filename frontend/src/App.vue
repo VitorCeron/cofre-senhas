@@ -32,7 +32,21 @@
       v-if="state.showTopbarAndMenu"
     >
       <q-list>
-        <q-item-label header>Essential Links</q-item-label>
+        
+        <q-item class="active-class" :to="{ name: 'Dashboard' }">
+          <q-tooltip
+            transition-show="scale"
+            transition-hide="scale"  
+            anchor="center right" 
+            self="center middle"
+          >
+            Dashboard
+          </q-tooltip>
+          <q-item-section avatar>
+            <q-icon name="dashboard" />
+          </q-item-section>
+        </q-item>
+
         <q-item class="active-class" :to="{ name: 'ListPasswords' }">
           <q-tooltip
             transition-show="scale"
@@ -114,7 +128,7 @@ export default {
     }
 
     function goToHome () {
-      router.push({ name: 'ListPasswords' })
+      router.push({ name: 'Dashboard' })
     }
 
     return {

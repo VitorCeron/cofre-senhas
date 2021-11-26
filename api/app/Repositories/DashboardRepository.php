@@ -49,6 +49,7 @@ class DashboardRepository {
         return QueryBuilder::for(UserPasswords::class)
                 ->where('user_id', Auth::user()->id)
                 ->where('expire', '<', Carbon::now()->addDays(30))
+                ->orderBy('expire')
                 ->get();
     }
 

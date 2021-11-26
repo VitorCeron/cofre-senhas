@@ -31,6 +31,13 @@ class DashboardController extends Controller
      */
     public function get() {
         $countUserPasswords = $this->dashboardRepository->getCountUserPasswordsByUser();
+
+        if($countUserPasswords == 0) {
+            return new DashboardResource([
+                'data' => ['empty_data' => true]
+            ]);
+        }
+
         $countDuplicatePasswords = $this->dashboardRepository->getDuplicatePasswords();
         $countPasswordsExpireIn30Days = $this->dashboardRepository->getPasswordsExpireIn30Days()->count();
         $averageScorePasswords = $this->dashboardRepository->getAverageScorePasswords();
@@ -45,7 +52,8 @@ class DashboardController extends Controller
             "average_score_passwords" => round($averageScorePasswords, 2),
             "color_score_passwords" => $colorScorePasswords,
             "label_score_passwords" => $labelScorePasswords,
-            "list_passwords_expire_in_30_days" => $listPasswordsExpireIn30Days,
+            "list_passwords_expire_in_30_days" => $listPasswordsExpireIn30Days->take(5),
+            "empty_data" => false
         ];
 
         return new DashboardResource([

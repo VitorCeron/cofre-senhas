@@ -10,7 +10,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 class ActivityLogRepository {
     /**
      * Get all registers
-     * 
+     *
      * @return Collection
      */
     public function get()
@@ -19,6 +19,7 @@ class ActivityLogRepository {
             return QueryBuilder::for(Activity::class)
                 ->allowedFilters(['description'])
                 ->where('causer_id', Auth::user()->id)
+                ->orderBy('id', 'desc')
                 ->paginate();
         } catch(\Exception $e) {
             return $e->getMessage();

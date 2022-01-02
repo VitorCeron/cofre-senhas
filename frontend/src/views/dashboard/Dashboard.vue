@@ -155,7 +155,7 @@ export default {
                     },
                     labels: [],
                     title: {
-                        text: 'Média de força de senha',
+                        text: 'Média de força das senhas',
                         align: 'left',
                         margin: 20,
                         style: {
